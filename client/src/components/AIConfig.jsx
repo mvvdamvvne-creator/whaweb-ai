@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { BrainCircuit, Globe, Webhook, CheckCircle2, Settings, Loader2 } from 'lucide-react';
 
 const AIConfig = () => {
@@ -18,7 +18,7 @@ const AIConfig = () => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/ai-config');
+        const res = await api.get('/ai-config');
         setConfig(res.data);
       } catch (err) {
         console.error("Error fetching AI config:", err);
@@ -33,7 +33,7 @@ const AIConfig = () => {
     setSaving(true);
     setMessage('');
     try {
-      await axios.post('http://localhost:5000/api/ai-config', config);
+      await api.post('/ai-config', config);
       setMessage('Configuration enregistrée avec succès !');
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {

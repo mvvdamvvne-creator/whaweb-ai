@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 import { 
   LayoutDashboard, 
   Users, 
@@ -6,7 +7,8 @@ import {
   MessageSquare, 
   Zap, 
   Settings, 
-  BarChart3 
+  BarChart3,
+  UserCircle
 } from 'lucide-react';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick, badge }) => (
@@ -31,6 +33,17 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, badge }) => (
 );
 
 const Sidebar = ({ activeTab, setActiveTab, contactsCount }) => {
+  const { user } = useAuth();
+  
+  const getInitials = (name) => {
+    if (!name) return '??';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  };
+
+  const profileImageUrl = user?.profilePicture 
+    ? `http://localhost:5000${user.profilePicture}` 
+    : null;
+
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 relative z-20">
       <div className="p-6">
@@ -50,7 +63,7 @@ const Sidebar = ({ activeTab, setActiveTab, contactsCount }) => {
         <SidebarItem icon={LayoutDashboard} label="Dashboard" active={activeTab === 'Dashboard'} onClick={() => setActiveTab('Dashboard')} />
         <SidebarItem icon={Users} label="Contacts" badge={contactsCount > 0 ? contactsCount.toString() : null} active={activeTab === 'Contacts'} onClick={() => setActiveTab('Contacts')} />
         <SidebarItem icon={Send} label="Campagnes" active={activeTab === 'Campaigns'} onClick={() => setActiveTab('Campaigns')} />
-        <SidebarItem icon={MessageSquare} label="Messages" active={activeTab === 'Conversations'} onClick={() => setActiveTab('Conversations')} />
+        <SidebarItem icon={MessageSquare} label="WhatsApp Web" active={activeTab === 'Conversations'} onClick={() => setActiveTab('Conversations')} />
 
         <div className="px-6 mt-8 mb-3 text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em]">Automatisation</div>
         <SidebarItem icon={Zap} label="Workflows" active={activeTab === 'Flows'} onClick={() => setActiveTab('Flows')} />
@@ -58,15 +71,25 @@ const Sidebar = ({ activeTab, setActiveTab, contactsCount }) => {
 
         <div className="px-6 mt-8 mb-3 text-[10px] font-medium text-slate-400 uppercase tracking-[0.2em]">Système</div>
         <SidebarItem icon={BarChart3} label="Analyses" active={activeTab === 'Analytics'} onClick={() => setActiveTab('Analytics')} />
+        <SidebarItem icon={UserCircle} label="Mon Profil" active={activeTab === 'Profile'} onClick={() => setActiveTab('Profile')} />
         <SidebarItem icon={Settings} label="Paramètres" active={activeTab === 'Settings'} onClick={() => setActiveTab('Settings')} />
       </nav>
 
       <div className="p-4">
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200/60 group cursor-pointer hover:bg-slate-100 transition-all duration-200">
-          <div className="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 font-medium shrink-0 text-xs">AK</div>
+        <div 
+          onClick={() => setActiveTab('Profile')}
+          className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200/60 group cursor-pointer hover:bg-slate-100 transition-all duration-200"
+        >
+          <div className="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 font-medium shrink-0 text-xs overflow-hidden">
+            {profileImageUrl ? (
+              <img src={profileImageUrl} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              getInitials(user?.fullName || user?.username)
+            )}
+          </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-900 truncate">Amine K.</p>
-            <p className="text-[10px] text-slate-500 font-medium">Plan Illimité</p>
+            <p className="text-sm font-medium text-slate-900 truncate">{user?.fullName || user?.username}</p>
+            <p className="text-[10px] text-slate-500 font-medium lowercase">@{user?.username}</p>
           </div>
         </div>
       </div>

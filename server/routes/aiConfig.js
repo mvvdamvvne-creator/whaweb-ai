@@ -2,20 +2,20 @@ const express = require('express');
 const router = express.Router();
 const AIConfig = require('../models/AIConfig');
 
-// Get AI Config
+// Get AI Config for the authenticated user
 router.get('/', async (req, res) => {
     try {
-        const config = await AIConfig.getOrCreate();
+        const config = await AIConfig.getOrCreate(req.user._id);
         res.json(config);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// Update AI Config
+// Update AI Config for the authenticated user
 router.post('/', async (req, res) => {
     try {
-        let config = await AIConfig.getOrCreate();
+        let config = await AIConfig.getOrCreate(req.user._id);
         
         config.openaiKey = req.body.openaiKey !== undefined ? req.body.openaiKey : config.openaiKey;
         config.systemPrompt = req.body.systemPrompt !== undefined ? req.body.systemPrompt : config.systemPrompt;

@@ -4,11 +4,12 @@ const MessageLog = require('../models/MessageLog');
 const Contact = require('../models/Contact');
 
 router.get('/summary', async (req, res) => {
+    const userId = req.user._id;
     try {
-        const totalSent = await MessageLog.countDocuments({ type: 'SENT' });
-        const totalRead = await MessageLog.countDocuments({ status: 'READ' });
-        const totalReplied = await MessageLog.countDocuments({ status: 'REPLIED' });
-        const totalContacts = await Contact.countDocuments();
+        const totalSent = await MessageLog.countDocuments({ userId, type: 'SENT' });
+        const totalRead = await MessageLog.countDocuments({ userId, status: 'READ' });
+        const totalReplied = await MessageLog.countDocuments({ userId, status: 'REPLIED' });
+        const totalContacts = await Contact.countDocuments({ userId });
 
         // Calculate rates
         const openRate = totalSent > 0 ? (totalRead / totalSent * 100).toFixed(1) : 0;
@@ -26,8 +27,9 @@ router.get('/summary', async (req, res) => {
 });
 
 router.get('/recent', async (req, res) => {
+    const userId = req.user._id;
     try {
-        const recentMessages = await MessageLog.find()
+        const recentMessages = await MessageLog.find({ userId })
             .sort({ timestamp: -1 })
             .limit(10);
         res.json(recentMessages);
@@ -37,13 +39,13 @@ router.get('/recent', async (req, res) => {
 });
 
 router.get('/chart', async (req, res) => {
+    const userId = req.user._id;
     try {
-        // Simple 7-day volume chart data
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
         const stats = await MessageLog.aggregate([
-            { $match: { timestamp: { $gte: sevenDaysAgo } } },
+            { $match: { userId: userId, timestamp: { $gte: sevenDaysAgo } } },
             {
                 $group: {
                     _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { 
   Plus, 
   Smartphone, 
@@ -27,9 +27,9 @@ const Dashboard = ({ whatsappStatus, qrCode }) => {
 
   const fetchData = async () => {
     try {
-      const summaryRes = await axios.get('http://localhost:5000/api/stats/summary');
-      const chartRes = await axios.get('http://localhost:5000/api/stats/chart');
-      const recentRes = await axios.get('http://localhost:5000/api/stats/recent');
+      const summaryRes = await api.get('/stats/summary');
+      const chartRes = await api.get('/stats/chart');
+      const recentRes = await api.get('/stats/recent');
 
       setStats({
         totalSent: (summaryRes.data.totalSent || 0).toLocaleString(),
@@ -143,8 +143,8 @@ const Dashboard = ({ whatsappStatus, qrCode }) => {
               <button className="px-4 py-1.5 text-[10px] font-medium text-slate-400 hover:text-slate-600 rounded-md transition-all uppercase tracking-widest">30 JOURS</button>
             </div>
           </div>
-          <div className="h-[280px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[280px] w-full min-h-[280px]">
+            <ResponsiveContainer width="100%" height={280}>
               <BarChart data={chartData.length > 0 ? chartData : [{ name: '...', messages: 0 }]}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 11, fontWeight: 700}} dy={15} />

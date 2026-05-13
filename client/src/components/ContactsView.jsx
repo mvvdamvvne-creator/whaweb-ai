@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Search, FileDown, MoreVertical, Plus, X, Trash2, Upload } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -14,7 +14,7 @@ const ContactsView = () => {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/contacts');
+      const res = await api.get('/contacts');
       setContacts(res.data);
       setLoading(false);
     } catch (err) {
@@ -31,7 +31,7 @@ const ContactsView = () => {
     e.preventDefault();
     try {
       const tagsArray = newContact.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-      await axios.post('http://localhost:5000/api/contacts', {
+      await api.post('/contacts', {
         ...newContact,
         tags: tagsArray
       });
@@ -58,12 +58,23 @@ const ContactsView = () => {
         const data = XLSX.utils.sheet_to_json(ws);
 
         // Map data to our format
-        // Expected columns: "Nom" or "Name", "Telephone" or "Phone"
-        const formattedContacts = data.map(item => ({
-          name: item.Nom || item.Name || item.name || 'Sans Nom',
-          phone: String(item.Telephone || item.Phone || item.phone || '').replace(/\s/g, ''),
-          tags: ['Importé', new Date().toLocaleDateString()]
-        })).filter(c => c.phone);
+        // Expected columns: "Nom" or "Name", "Telephone" or "Phone", etc.
+        const formattedContacts = data.map(item => {
+          // Normalize keys to lowercase and trim
+          const normalizedItem = {};
+          Object.keys(item).forEach(key => {
+            normalizedItem[key.toLowerCase().trim()] = item[key];
+          });
+
+          const name = normalizedItem.nom || normalizedItem.name || normalizedItem.nombre || normalizedItem.username || 'Sans Nom';
+          const phone = String(normalizedItem.telephone || normalizedItem.phone || normalizedItem.tel || normalizedItem.mobile || normalizedItem.numéro || '').replace(/\s/g, '');
+
+          return {
+            name,
+            phone,
+            tags: ['Importé', new Date().toLocaleDateString()]
+          };
+        }).filter(c => c.phone);
 
         if (formattedContacts.length === 0) {
           alert("Aucun contact valide trouvé. Assurez-vous d'avoir des colonnes 'Name' et 'Phone'.");
@@ -71,11 +82,17 @@ const ContactsView = () => {
           return;
         }
 
-        const res = await axios.post('http://localhost:5000/api/contacts/bulk', {
+        console.log("Formatted contacts for import:", formattedContacts);
+
+        const res = await api.post('/contacts/bulk', {
           contacts: formattedContacts
         });
 
-        alert(res.data.message);
+        if (res.status === 207) {
+          alert("Importation partielle : " + res.data.message);
+        } else {
+          alert(res.data.message);
+        }
         fetchContacts();
       } catch (err) {
         console.error("Import error:", err);
@@ -91,7 +108,7 @@ const ContactsView = () => {
   const handleDeleteContact = async (id) => {
     if (window.confirm("Supprimer ce contact ?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/contacts/${id}`);
+        await api.delete(`/contacts/${id}`);
         fetchContacts();
       } catch (err) {
         alert("Error deleting contact");

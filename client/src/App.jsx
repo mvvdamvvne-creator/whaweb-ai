@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from './api';
+import { useAuth } from './context/AuthContext';
 import { 
   LayoutDashboard, 
-  Plus 
+  Plus,
+  LogOut
 } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import ContactsView from './components/ContactsView';
 import CampaignForm from './components/CampaignForm';
 import AIConfig from './components/AIConfig';
+import Profile from './components/Profile';
+import Auth from './components/Auth';
+import WhatsAppWeb from './components/WhatsAppWeb';
 
-function App() {
+function AppContent() {
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [whatsappStatus, setWhatsappStatus] = useState('DISCONNECTED');
   const [qrCode, setQrCode] = useState(null);
@@ -18,9 +24,11 @@ function App() {
   const [contactsCount, setContactsCount] = useState(0);
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchContactsCount = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/contacts');
+        const res = await api.get('/contacts');
         setContactsCount(res.data.length);
       } catch (err) {
         console.error("Error fetching contacts count:", err);
@@ -29,19 +37,21 @@ function App() {
 
     const checkStatus = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/health');
+        const response = await api.get('/health', { timeout: 3000 });
         setWhatsappStatus(response.data.whatsapp);
         setIsOnline(true);
         
         if (response.data.whatsapp === 'QR_READY') {
-          const qrRes = await axios.get('http://localhost:5000/api/whatsapp/qr');
+          const qrRes = await api.get('/whatsapp/qr', { timeout: 3000 });
           setQrCode(qrRes.data.qr);
         } else {
           setQrCode(null);
         }
       } catch (error) {
+        console.error("Backend unreachable:", error.message);
         setWhatsappStatus('OFFLINE');
         setIsOnline(false);
+        setQrCode(null);
       }
     };
 
@@ -52,7 +62,11 @@ function App() {
       fetchContactsCount();
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
+
+  if (!user) {
+    return <Auth />;
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -62,8 +76,12 @@ function App() {
         return <ContactsView onUpdate={() => {}} />;
       case 'Campaigns':
         return <CampaignForm />;
+      case 'Conversations':
+        return <WhatsAppWeb />;
       case 'AI Config':
         return <AIConfig />;
+      case 'Profile':
+        return <Profile />;
       default:
         return (
           <div className="flex flex-col items-center justify-center h-[600px] bg-white rounded-3xl border border-slate-200 border-dashed relative z-10 animate-in fade-in duration-500">
@@ -92,10 +110,19 @@ function App() {
           <div>
             <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{activeTab}</h2>
             <p className="text-slate-500 font-medium text-sm mt-0.5">
-              {activeTab === 'Dashboard' ? 'Bon retour Amine. Voici vos indicateurs clés.' : `Configuration de votre espace ${activeTab.toLowerCase()}`}
+              {activeTab === 'Dashboard' ? `Bon retour ${user.username}. Voici vos indicateurs clés.` : `Configuration de votre espace ${activeTab.toLowerCase()}`}
             </p>
           </div>
           <div className="flex items-center gap-5">
+            <div className="text-right hidden sm:block mr-4 border-r border-slate-200 pr-4">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5 text-right">{user.email}</p>
+              <button 
+                onClick={logout}
+                className="text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-1 ml-auto hover:text-red-700 transition-colors"
+              >
+                <LogOut size={10} strokeWidth={3} /> Déconnexion
+              </button>
+            </div>
             <div className="text-right hidden sm:block">
               <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-0.5 text-right">AUJOURD'HUI</p>
               <p className="text-sm font-medium text-slate-900 tracking-tight uppercase">{new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
@@ -114,6 +141,10 @@ function App() {
       </main>
     </div>
   );
+}
+
+function App() {
+  return <AppContent />;
 }
 
 export default App;

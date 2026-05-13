@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { ChevronDown, Send, Loader2, CheckCircle2 } from 'lucide-react';
 
 const CampaignForm = () => {
@@ -13,7 +13,7 @@ const CampaignForm = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/contacts/tags');
+        const res = await api.get('/contacts/tags');
         setTags(res.data);
       } catch (err) {
         console.error("Error fetching tags:", err);
@@ -28,7 +28,7 @@ const CampaignForm = () => {
     setLoading(true);
     setStatus(null);
     try {
-      const res = await axios.post('http://localhost:5000/api/campaigns/send', {
+      const res = await api.post('/campaigns/send', {
         segment: selectedSegment,
         message: message
       });

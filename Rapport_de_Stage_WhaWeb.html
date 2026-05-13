@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Stage - WhaWeb - FirstOne Media</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #f4f7f6;
+        }
+        .page {
+            background-color: #fff;
+            padding: 60px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            min-height: 1000px;
+        }
+        h1, h2, h3, h4 {
+            color: #10b981;
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-top: 100px;
+        }
+        h2 {
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 24px;
+        }
+        .cover-page {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 900px;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #10b981;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin-bottom: 10px;
+        }
+        .toc a {
+            text-decoration: none;
+            color: #333;
+        }
+        .code-block {
+            background-color: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            border-left: 4px solid #10b981;
+            margin: 20px 0;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #059669;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 50px;
+        }
+        @media print {
+            body { background-color: #fff; padding: 0; }
+            .page { box-shadow: none; margin: 0; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE DE GARDE -->
+    <div class="page cover-page">
+        <div>
+            <p style="font-size: 20px; font-weight: bold;">BTS - PÔLE D'ESSAOUIRA</p>
+            <p>Filière : Développement Web Full Stack</p>
+        </div>
+        
+        <div>
+            <h1>RAPPORT DE STAGE</h1>
+            <p style="font-size: 24px;">Projet : <span class="logo">WhaWeb</span></p>
+            <p>Plateforme de Marketing et d'Automatisation WhatsApp Intelligente</p>
+        </div>
+
+        <div>
+            <p><strong>Entreprise d'accueil :</strong> FirstOne Media</p>
+            <p><strong>Stagiaire :</strong> [VOTRE NOM ET PRÉNOM]</p>
+            <p><strong>Tuteur de stage :</strong> [NOM DU TUTEUR]</p>
+            <p><strong>Période :</strong> Mai 2026</p>
+        </div>
+    </div>
+
+    <!-- REMERCIEMENTS -->
+    <div class="page">
+        <h2>Remerciements</h2>
+        <p>Avant de débuter ce rapport, je tiens à exprimer ma profonde gratitude à l'équipe de <strong>FirstOne Media</strong> pour m'avoir accueilli au sein de leur structure dynamique. Ce stage a été une opportunité exceptionnelle de mettre en pratique mes compétences théoriques acquises lors de ma formation en BTS à Essaouira.</p>
+        <p>Je remercie particulièrement mon tuteur de stage pour son encadrement, sa patience et ses précieux conseils techniques qui m'ont permis de surmonter les défis complexes de ce projet.</p>
+        <p>Enfin, je remercie le corps enseignant de mon institut pour la qualité de l'enseignement qui m'a fourni les bases nécessaires pour réaliser ce projet Full Stack de bout en bout.</p>
+    </div>
+
+    <!-- SOMMAIRE -->
+    <div class="page toc">
+        <h2>Sommaire</h2>
+        <ul>
+            <li><strong>1. Introduction Générale</strong></li>
+            <li><strong>2. Présentation de l'Entreprise</strong></li>
+            <li><strong>3. Analyse des Besoins et Conception</strong>
+                <ul>
+                    <li>3.1. Problématique</li>
+                    <li>3.2. Solution Proposée</li>
+                    <li>3.3. Cahier des Charges</li>
+                </ul>
+            </li>
+            <li><strong>4. Environnement Technique (Stack MERN)</strong></li>
+            <li><strong>5. Réalisation et Mise en Œuvre</strong>
+                <ul>
+                    <li>5.1. Développement Backend (Node.js/Express)</li>
+                    <li>5.2. Architecture de la Base de Données (MongoDB)</li>
+                    <li>5.3. Interface Utilisateur (React.js/Tailwind)</li>
+                    <li>5.4. Intégration de l'API WhatsApp</li>
+                    <li>5.5. Intelligence Artificielle et Automatisation</li>
+                </ul>
+            </li>
+            <li><strong>6. Défis Techniques et Solutions</strong></li>
+            <li><strong>7. Tests et Résultats</strong></li>
+            <li><strong>8. Conclusion et Perspectives</strong></li>
+        </ul>
+    </div>
+
+    <!-- INTRODUCTION -->
+    <div class="page">
+        <h2>1. Introduction Générale</h2>
+        <p>À l'ère de la transformation numérique, la communication instantanée est devenue le pilier central de la relation client. WhatsApp, avec plus de 2 milliards d'utilisateurs, s'impose comme l'outil privilégié des entreprises pour interagir avec leur audience.</p>
+        <p>Le projet <strong>WhaWeb</strong> s'inscrit dans cette dynamique. Il vise à transformer un simple compte WhatsApp en un véritable outil de CRM (Customer Relationship Management) et de marketing automatisé. Durant ce stage chez FirstOne Media, j'ai eu la responsabilité de concevoir et développer une application Full Stack capable de gérer des contacts, de lancer des campagnes de messagerie et d'automatiser les réponses via l'Intelligence Artificielle.</p>
+    </div>
+
+    <!-- ANALYSE DES BESOINS -->
+    <div class="page">
+        <h2>3. Analyse des Besoins et Conception</h2>
+        <h3>3.1. Problématique</h3>
+        <p>Les entreprises font face à trois défis majeurs sur WhatsApp :</p>
+        <ol>
+            <li>La difficulté de gérer manuellement des centaines de contacts.</li>
+            <li>L'impossibilité d'envoyer des messages groupés sans risquer le bannissement ou la perte de temps.</li>
+            <li>La nécessité d'être disponible 24h/24 pour répondre aux questions récurrentes des clients.</li>
+        </ol>
+
+        <h3>3.2. Cahier des Charges</h3>
+        <p>Les fonctionnalités prioritaires identifiées étaient :</p>
+        <ul>
+            <li><strong>Authentification sécurisée :</strong> Connexion via QR Code WhatsApp.</li>
+            <li><strong>Gestion de Base de Données :</strong> Stockage des contacts et de l'historique.</li>
+            <li><strong>Importation Excel :</strong> Gain de temps massif pour les équipes marketing.</li>
+            <li><strong>Dashboard Analytique :</strong> Suivi des statistiques d'envoi et de lecture.</li>
+            <li><strong>Moteur IA :</strong> Réponses automatiques basées sur une base de connaissances.</li>
+        </ul>
+    </div>
+
+    <!-- TECHNOLOGIES -->
+    <div class="page">
+        <h2>4. Environnement Technique</h2>
+        <p>Pour assurer scalabilité et performance, j'ai opté pour la <strong>Stack MERN</strong> :</p>
+        <ul>
+            <li><span class="highlight">MongoDB :</span> Base de données NoSQL flexible pour gérer des documents JSON (contacts, logs).</li>
+            <li><span class="highlight">Express.js :</span> Framework backend pour Node.js permettant de créer des APIs RESTful rapides.</li>
+            <li><span class="highlight">React.js :</span> Bibliothèque frontend pour créer une interface utilisateur réactive et modulaire.</li>
+            <li><span class="highlight">Node.js :</span> Environnement d'exécution JavaScript côté serveur.</li>
+        </ul>
+        <p>Outils complémentaires :</p>
+        <ul>
+            <li><strong>Tailwind CSS :</strong> Pour un design "utility-first" moderne.</li>
+            <li><strong>OpenAI SDK :</strong> Pour l'intégration des modèles GPT.</li>
+            <li><strong>whatsapp-web.js :</strong> Pour l'interaction avec le protocole WhatsApp.</li>
+        </ul>
+    </div>
+
+    <!-- REALISATION -->
+    <div class="page">
+        <h2>5. Réalisation et Mise en Œuvre</h2>
+        <h3>5.1. Développement Backend</h3>
+        <p>Le cœur du système repose sur Node.js. J'ai structuré le serveur en plusieurs modules : routes, modèles et contrôleurs. Un aspect crucial a été la gestion des événements WhatsApp en temps réel.</p>
+        
+        <div class="code-block">
+            // Exemple de gestion d'événement dans index.js
+            client.on('message', async (msg) => {
+                const contact = await msg.getContact();
+                console.log(`Message reçu de ${contact.number}`);
+                // Logique de réponse automatique...
+            });
+        </div>
+
+        <h3>5.2. Architecture MongoDB</h3>
+        <p>J'ai conçu trois schémas principaux avec Mongoose :</p>
+        <ul>
+            <li><strong>Contact :</strong> Nom, Téléphone, Tags.</li>
+            <li><strong>MessageLog :</strong> ID message, Type (SENT/RECEIVED), Statut (READ/REPLIED), Timestamp.</li>
+            <li><strong>AIConfig :</strong> Clé API, System Prompt, Knowledge Base.</li>
+        </ul>
+
+        <h3>5.3. Interface Utilisateur (React)</h3>
+        <p>L'interface a été conçue pour être intuitive. J'ai implémenté un système d'onglets (Dashboard, Contacts, Campagnes, IA Config) permettant une navigation fluide. Les composants sont stylisés avec Tailwind pour garantir une esthétique professionnelle.</p>
+    </div>
+
+    <!-- INNOVATIONS -->
+    <div class="page">
+        <h2>5.4. Innovation : Importation Excel Massive</h2>
+        <p>L'une des fonctionnalités les plus avancées est le module d'importation. En utilisant la librairie <code>xlsx</code>, j'ai permis à l'utilisateur de charger des milliers de contacts en quelques secondes.</p>
+        <p>Le processus inclut :</p>
+        <ol>
+            <li>Lecture du fichier binaire côté client.</li>
+            <li>Parsing des colonnes (Nom, Téléphone).</li>
+            <li>Nettoyage des données (suppression des espaces, formatage international).</li>
+            <li>Envoi groupé au serveur (Bulk Insert) pour optimiser les performances de la base de données.</li>
+        </ol>
+        
+        <h3>5.5. L'Intelligence Artificielle au service du Marketing</h3>
+        <p>L'assistant IA ne se contente pas de répondre. Il analyse l'intention du client. Si un client demande un prix, l'IA consulte la "Knowledge Base" configurée sur le dashboard et répond avec précision en utilisant le modèle <strong>GPT-4o</strong>.</p>
+    </div>
+
+    <!-- DEFIS -->
+    <div class="page">
+        <h2>6. Défis Techniques et Solutions</h2>
+        <p>Durant le développement, j'ai été confronté à des défis complexes :</p>
+        
+        <h4>A. Le problème de l'identifiant WhatsApp (LID)</h4>
+        <p><strong>Défi :</strong> WhatsApp utilise parfois des IDs internes (@lid) qui diffèrent des numéros de téléphone réels (@c.us), ce qui rendait le calcul du taux de réponse impossible.</p>
+        <p><strong>Solution :</strong> J'ai développé un <strong>Universal Matcher</strong>. Cet algorithme extrait les 8 derniers chiffres de chaque identifiant et effectue une recherche par expression régulière (Regex) dans la base de données pour lier le message entrant au message envoyé, garantissant des statistiques 100% exactes.</p>
+
+        <h4>B. Persistance de la session</h4>
+        <p><strong>Défi :</strong> Le QR Code devait être scanné trop souvent.</p>
+        <p><strong>Solution :</strong> Implémentation de <code>LocalAuth</code> pour sauvegarder les données de session Puppeteer dans un dossier local sécurisé, permettant une reconnexion automatique du serveur.</p>
+    </div>
+
+    <!-- CONCLUSION -->
+    <div class="page">
+        <h2>8. Conclusion et Perspectives</h2>
+        <p>Ce stage chez <strong>FirstOne Media</strong> a été une expérience transformatrice. J'ai pu mener un projet de A à Z, de la compréhension du besoin client jusqu'à l'implémentation de fonctionnalités d'Intelligence Artificielle de pointe.</p>
+        <p>Le projet <strong>WhaWeb</strong> remplit tous les objectifs fixés. Pour la suite, nous envisageons d'ajouter le support des messages multimédias (images/PDF) et une interface de discussion multi-agents pour permettre à plusieurs employés de répondre simultanément sur le même numéro WhatsApp.</p>
+        <p>En conclusion, ce travail m'a permis de consolider mes acquis en développement Full Stack et de confirmer ma passion pour la création de solutions logicielles innovantes.</p>
+    </div>
+
+    <div class="footer">
+        © 2026 - Rapport de Stage BTS Essaouira - Projet WhaWeb
+    </div>
+
+</body>
+</html>

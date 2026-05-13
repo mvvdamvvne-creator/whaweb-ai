@@ -3,3 +3,16 @@
 @theme {
   --font-sans: "Inter", -apple-system, sans-serif;
 }
+
+@layer base {
+  button, 
+  [role="button"],
+  input[type="submit"],
+  select {
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    cursor: not-allowed;
+  }
+}

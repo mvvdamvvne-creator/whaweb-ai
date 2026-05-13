@@ -1,5 +1,12 @@
 node_modules/
 sessions/
+.wwebjs_cache/
+.wwebjs_auth/
 .env
 dist/
 .DS_Store
+*.log
+npm-debug.log*
+.idea/
+.vscode/
+uploads/

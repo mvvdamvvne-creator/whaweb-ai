@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const aiConfigSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        unique: true
+    },
     openaiKey: {
         type: String,
         default: ''
@@ -31,11 +37,12 @@ const aiConfigSchema = new mongoose.Schema({
     }
 });
 
-// Since we only need one config, we can ensure only one document exists
-aiConfigSchema.statics.getOrCreate = async function() {
-    let config = await this.findOne();
+// Update to ensure one config per user
+aiConfigSchema.statics.getOrCreate = async function(userId) {
+    if (!userId) throw new Error('userId is required for AIConfig.getOrCreate');
+    let config = await this.findOne({ userId });
     if (!config) {
-        config = await this.create({});
+        config = await this.create({ userId });
     }
     return config;
 };
